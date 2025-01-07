@@ -5,10 +5,10 @@ const secondEl = document.querySelectorAll("#second-value");
 
 // declaring initial values for the day,hour,minute and second depending on the users current time.
 // Create a new date object for new year and subtract in from the current date to get the remaining time in milliseconds.
-const newYear = new Date(2025, 0, 1);
+const newYear = new Date(2026, 0, 1);
 let currentDate = new Date();
-let remainingTime = newYear - currentDate;// remianing time in milliseconds
-let remainingDays = Math.floor(remainingTime / (1000 * 60 * 60 * 24));// convert the remainingTime to days(1second=1000milliseconds)
+let remainingTime = newYear - currentDate; // remianing time in milliseconds
+let remainingDays = Math.floor(remainingTime / (1000 * 60 * 60 * 24)); // convert the remainingTime to days(1second=1000milliseconds)
 
 /*To get the remaining hours for the day I have created a new Date object for the 
 next day(this holds the milliseconds till the start of next day) and subtracted 
@@ -137,6 +137,14 @@ function createTemporarySecondFlipper() {
   bottomDiv.addEventListener("animationend", () => bottomDiv.remove());
 }
 
+// When the countdown ends set all the values to 0
+if(currentDate>=newYear){
+  remainingDays=0;
+  remainingHours=0;
+  remainingMinutes=0;
+  remainingSeconds=0;
+}
+
 /*The following code inserts the initial value of each time component(day, hour...) in the respective elements*/
 minuteEl.forEach((element) => {
   if (remainingMinutes < 10) {
@@ -162,77 +170,90 @@ dayEl.forEach((element) => {
   }
 });
 
+secondEl.forEach((element) => {
+  if (remainingSeconds < 10) {
+    element.textContent = String(remainingSeconds).padStart(2, "0");
+  } else {
+    element.textContent = remainingSeconds;
+  }
+});
+
 /*The setInterval function was used to update the value of the time components. It runs every second and updates the value of the remainingSeconds.
 For the other time components(hour, minute, day) the update only happens if the value has changed from the initial value.
 
 The functions were intentianally called before updating the value of the respective time components to give an effect of the initial time giving
 way to the new time. Updating the value before calling the function makes th animation look kind of off.
 */
-setInterval(() => {
-  createTemporarySecondFlipper();
-  remainingSeconds = 60 - new Date().getSeconds();
-  secondEl.forEach((element) => {
-    if (remainingSeconds < 10) {
-      element.textContent = String(remainingSeconds).padStart(2, "0");
-    } else {
-      element.textContent = remainingSeconds;
+if (currentDate < newYear) {
+  setInterval(() => {
+    createTemporarySecondFlipper();
+    remainingSeconds = 60 - new Date().getSeconds();
+    secondEl.forEach((element) => {
+      if (remainingSeconds < 10) {
+        element.textContent = String(remainingSeconds).padStart(2, "0");
+      } else {
+        element.textContent = remainingSeconds;
+      }
+    });
+
+    if (remainingMinutes !== 60 - new Date().getMinutes()) {
+      createTemporaryMinuteFlipper();
+      remainingMinutes = 60 - new Date().getUTCMinutes();
+      minuteEl.forEach((element) => {
+        if (remainingMinutes < 10) {
+          element.textContent = String(remainingMinutes).padStart(2, "0");
+        } else {
+          element.textContent = remainingMinutes;
+        }
+      });
     }
-  });
 
-  if (remainingMinutes !== 60 - new Date().getMinutes()) {
-    createTemporaryMinuteFlipper();
-    remainingMinutes = 60 - new Date().getUTCMinutes();
-    minuteEl.forEach((element) => {
-      if (remainingMinutes < 10) {
-        element.textContent = String(remainingMinutes).padStart(2, "0");
-      } else {
-        element.textContent = remainingMinutes;
-      }
-    });
-  }
+    if (
+      remainingHours !==
+      Math.floor(
+        (new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate() + 1
+        ) -
+          new Date()) /
+          (1000 * 60 * 60)
+      )
+    ) {
+      createTemporaryHourFlipper();
+      remainingHours = Math.floor(
+        (new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate() + 1
+        ) -
+          new Date()) /
+          (1000 * 60 * 60)
+      );
+      hourEl.forEach((element) => {
+        if (remainingHours < 10) {
+          element.textContent = String(remainingHours).padStart(2, "0");
+        } else {
+          element.textContent = remainingHours;
+        }
+      });
+    }
 
-  if (
-    remainingHours !==
-    Math.floor(
-      (new Date(
-        new Date().getFullYear(),
-        new Date().getMonth(),
-        new Date().getDate() + 1
-      ) -
-        new Date()) /
-        (1000 * 60 * 60)
-    )
-  ) {
-    createTemporaryHourFlipper();
-    remainingHours = Math.floor(
-      (new Date(
-        new Date().getFullYear(),
-        new Date().getMonth(),
-        new Date().getDate() + 1
-      ) -
-        new Date()) /
-        (1000 * 60 * 60)
-    );
-    hourEl.forEach((element) => {
-      if (remainingHours < 10) {
-        element.textContent = String(remainingHours).padStart(2, "0");
-      } else {
-        element.textContent = remainingHours;
-      }
-    });
-  }
-
-  if (
-    remainingDays !== Math.floor((newYear - new Date()) / (1000 * 60 * 60 * 24))
-  ) {
-    createTemporaryDayFlipper();
-    remainingDays = Math.floor((newYear - new Date()) / (1000 * 60 * 60 * 24));
-    dayEl.forEach((element) => {
-      if (remainingDays < 10) {
-        element.textContent = String(remainingDays).padStart(2, "0");
-      } else {
-        element.textContent = remainingDays;
-      }
-    });
-  }
-}, 1000);
+    if (
+      remainingDays !==
+      Math.floor((newYear - new Date()) / (1000 * 60 * 60 * 24))
+    ) {
+      createTemporaryDayFlipper();
+      remainingDays = Math.floor(
+        (newYear - new Date()) / (1000 * 60 * 60 * 24)
+      );
+      dayEl.forEach((element) => {
+        if (remainingDays < 10) {
+          element.textContent = String(remainingDays).padStart(2, "0");
+        } else {
+          element.textContent = remainingDays;
+        }
+      });
+    }
+  }, 1000);
+}

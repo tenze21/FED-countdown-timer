@@ -32,7 +32,7 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
+- Solution URL: [Add solution URL here](https://www.frontendmentor.io/solutions/launch-down-timer-modified-to-new-year-count-down-bjTfC0V6Nv)
 - Live Site URL: [https://newyear-countdown-timer-five.vercel.app/](https://newyear-countdown-timer-five.vercel.app/)
 
 ## My process
@@ -50,7 +50,7 @@ Like I do from all the other frontend mentor challenges, I learned a lot form th
 
 ## Author
 
-- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/yourusername)
+- Frontend Mentor - [@tenze21](https://www.frontendmentor.io/profile/tenze21)
 - linkedin - [@tenzin-choda](https://www.linkedin.com/in/tenzin-choda-8497b8307?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium)
 
 ## Acknowledgments
